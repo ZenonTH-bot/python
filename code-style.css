@@ -1,0 +1,34 @@
+/* code-style.css -- CSS for code blocks and inline code */
+
+/* Wrapper for code blocks */
+.codebox {
+  background: #F5F7FA; /* CodeBack */
+  border: 1px solid #D0D7E0; /* CodeFrame */
+  border-radius: 6px;
+  padding: 0.6em;
+  margin: 0.8em 0;
+  overflow-x: auto;
+  font-family: "Fira Code", "Source Code Pro", "DejaVu Sans Mono", monospace;
+  color: #0B1B2B; /* CodeText */
+}
+
+/* code inside pre */
+.codebox pre {
+  background: transparent;
+  margin: 0;
+}
+
+/* Inline code */
+.inline-code {
+  background: #FFF3CD; /* InlineCodeBack */
+  color: #D32F2F;      /* InlineCodeText */
+  padding: 0.08em 0.25em;
+  border-radius: 4px;
+  font-family: "Fira Code", monospace;
+  font-size: 0.95em;
+}
+
+/* Optional token styles if using a syntax highlighter */
+.token.comment { color: #6A6F73; font-style: italic; }
+.token.keyword { color: #7B1FA2; font-weight: 700; }
+.token.string  { color: #0B8A3E; }
