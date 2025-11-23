@@ -1,37 +1,55 @@
 #!/usr/bin/env bash
-# Build script: generates HTML, PDF, DOCX with code highlighting
+# build.sh -- build per-chapter and combined outputs
 # Usage: ./build.sh [output_basename]
+set -e
+
 OUTBASE="${1:-python_guide_full}"
 MD_FILES=(chuong1.md chuong2.md chuong3.md chuong4.md chuong5.md chuong6.md chuong7.md)
 
-# Check pandoc
-if ! command -v pandoc >/dev/null 2>&1; then
-  echo "pandoc not found. Install pandoc and try again."
-  exit 1
+# Create outputs dir
+mkdir -p outputs
+
+# Build per-chapter DOCX and PDF
+for md in "${MD_FILES[@]}"; do
+  if [ ! -f "$md" ]; then
+    echo "No $md found, skipping."
+    continue
+  fi
+  base=$(basename "$md" .md)
+  out_docx="outputs/${base}.docx"
+  out_pdf="outputs/${base}.pdf"
+  echo "Building $out_docx and $out_pdf from $md ..."
+  # DOCX
+  pandoc "$md" -o "$out_docx" --standalone --toc --metadata title="$base" --highlight-style=tango
+  # PDF: use header.tex + lua-filter if present
+  if [ -f header.tex ] && [ -f color-spans.lua ]; then
+    pandoc "$md" -o "$out_pdf" --pdf-engine=xelatex \
+      -V geometry:margin=2cm -V papersize:a4 -V fontsize=11pt \
+      --toc --highlight-style=tango \
+      --include-in-header=header.tex --lua-filter=color-spans.lua || true
+  else
+    pandoc "$md" -o "$out_pdf" --pdf-engine=xelatex \
+      -V geometry:margin=2cm -V papersize:a4 -V fontsize=11pt \
+      --toc --highlight-style=tango || true
+  fi
+  ls -lh "$out_docx" "$out_pdf" || true
+done
+
+# Build combined document if exists
+if [ -f "python_guide_full.md" ]; then
+  echo "Building combined outputs for python_guide_full.md ..."
+  pandoc python_guide_full.md -o outputs/${OUTBASE}.docx --standalone --toc --metadata title="Tài liệu Python chuyên sâu (Phần 1+2)" --highlight-style=tango
+  if [ -f header.tex ] && [ -f color-spans.lua ]; then
+    pandoc python_guide_full.md -o outputs/${OUTBASE}.pdf --pdf-engine=xelatex \
+      -V geometry:margin=2cm -V papersize:a4 -V fontsize=11pt \
+      --toc --highlight-style=tango \
+      --include-in-header=header.tex --lua-filter=color-spans.lua || true
+  else
+    pandoc python_guide_full.md -o outputs/${OUTBASE}.pdf --pdf-engine=xelatex \
+      -V geometry:margin=2cm -V papersize:a4 -V fontsize=11pt \
+      --toc --highlight-style=tango || true
+  fi
+  ls -lh outputs/${OUTBASE}.* || true
 fi
 
-# Build HTML (with CSS)
-echo "Building HTML..."
-pandoc "${MD_FILES[@]}" -s -o "${OUTBASE}.html" --toc \
-  --css=code-style.css --highlight-style=tango \
-  --metadata title="Tài liệu Python chuyên sâu (Phần 1+2)"
-
-# Build PDF using xelatex (uses header.tex and lua filter)
-echo "Building PDF (xelatex)..."
-pandoc "${MD_FILES[@]}" -o "${OUTBASE}.pdf" --pdf-engine=xelatex \
-  --include-in-header=header.tex --lua-filter=color-spans.lua \
-  -V geometry:margin=2cm -V papersize:a4 -V fontsize=11pt --toc --highlight-style=tango \
-  --metadata title="Tài liệu Python chuyên sâu (Phần 1+2)"
-
-# Build DOCX (if you have a reference.docx to control styles)
-if [ -f reference.docx ]; then
-  echo "Building DOCX using reference.docx..."
-  pandoc "${MD_FILES[@]}" -o "${OUTBASE}.docx" --reference-doc=reference.docx --toc --highlight-style=tango \
-    --metadata title="Tài liệu Python chuyên sâu (Phần 1+2)"
-else
-  echo "Building DOCX (no reference.docx present)..."
-  pandoc "${MD_FILES[@]}" -o "${OUTBASE}.docx" --toc --highlight-style=tango \
-    --metadata title="Tài liệu Python chuyên sâu (Phần 1+2)"
-fi
-
-echo "Done. Outputs: ${OUTBASE}.html, ${OUTBASE}.pdf, ${OUTBASE}.docx"
+echo "All done. Outputs are in the 'outputs' directory."
