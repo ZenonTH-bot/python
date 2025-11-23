@@ -1,32 +1,27 @@
-% header.tex -- include this with pandoc --include-in-header=header.tex
-% LaTeX header: styles for code blocks and inline code (tcolorbox + listings)
+% header.tex -- LaTeX header for coloring code blocks and inline code
 \usepackage{xcolor}
 \usepackage{tcolorbox}
 \usepackage{listings}
 \usepackage{fontspec}
 
-% Fonts (xelatex): monospace
+% Monospace font (xelatex)
 \setmonofont{DejaVu Sans Mono}
 
-% Colors (adjust hex as you like)
-\definecolor{CodeBack}{HTML}{F5F7FA}      % background for code blocks
-\definecolor{CodeFrame}{HTML}{D0D7E0}     % frame color
-\definecolor{CodeText}{HTML}{0B1B2B}      % normal code text
-\definecolor{CodeKeyword}{HTML}{7B1FA2}   % keyword
-\definecolor{CodeString}{HTML}{0B8A3E}    % string
-\definecolor{CodeComment}{HTML}{6A6F73}   % comment
-\definecolor{InlineCodeBack}{HTML}{FFF3CD} % inline code background
-\definecolor{InlineCodeText}{HTML}{D32F2F} % inline code text color
+% Colors (adjust hex as desired)
+\definecolor{CodeBack}{HTML}{F5F7FA}
+\definecolor{CodeFrame}{HTML}{D0D7E0}
+\definecolor{CodeText}{HTML}{0B1B2B}
+\definecolor{CodeKeyword}{HTML}{7B1FA2}
+\definecolor{CodeString}{HTML}{0B8A3E}
+\definecolor{CodeComment}{HTML}{6A6F73}
+\definecolor{InlineCodeBack}{HTML}{FFF3CD}
+\definecolor{InlineCodeText}{HTML}{D32F2F}
 
-% tcolorbox wrapper for code blocks
+% tcolorbox for code blocks
 \tcbset{
   mycodebox/.style={
-    colback=CodeBack,
-    colframe=CodeFrame,
-    arc=1mm,
-    boxrule=0.5pt,
-    left=1mm, right=1mm, top=1mm, bottom=1mm,
-    boxsep=2pt,
+    colback=CodeBack, colframe=CodeFrame, arc=1mm, boxrule=0.5pt,
+    left=1mm, right=1mm, top=1mm, bottom=1mm, boxsep=2pt,
     fontupper=\small\ttfamily\color{CodeText}
   }
 }
@@ -36,12 +31,12 @@
   colframe=InlineCodeBack, fontupper=\ttfamily\color{InlineCodeText},
   boxrule=0pt, arc=1mm}
 
-% Macros used by Lua filter
+% Macros used by lua filter
 \newcommand{\CodeBoxBegin}{\begin{tcolorbox}[mycodebox]}
 \newcommand{\CodeBoxEnd}{\end{tcolorbox}}
 \newcommand{\InlineCode}[1]{\InlineCodeBox{#1}}
 
-% listings fallback settings (if used)
+% listings fallback styles
 \lstset{
   basicstyle=\ttfamily\small\color{CodeText},
   keywordstyle=\color{CodeKeyword}\bfseries,
