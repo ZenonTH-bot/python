@@ -1,6 +1,5 @@
-/* code-style.css -- CSS for code blocks and inline code */
+/* code-style.css -- CSS for HTML output (code blocks + inline code) */
 
-/* Wrapper for code blocks */
 .codebox {
   background: #F5F7FA; /* CodeBack */
   border: 1px solid #D0D7E0; /* CodeFrame */
@@ -12,13 +11,11 @@
   color: #0B1B2B; /* CodeText */
 }
 
-/* code inside pre */
 .codebox pre {
   background: transparent;
   margin: 0;
 }
 
-/* Inline code */
 .inline-code {
   background: #FFF3CD; /* InlineCodeBack */
   color: #D32F2F;      /* InlineCodeText */
@@ -28,7 +25,7 @@
   font-size: 0.95em;
 }
 
-/* Optional token styles if using a syntax highlighter */
+/* Optional token styles for Prism/Pygments if used */
 .token.comment { color: #6A6F73; font-style: italic; }
 .token.keyword { color: #7B1FA2; font-weight: 700; }
 .token.string  { color: #0B8A3E; }
