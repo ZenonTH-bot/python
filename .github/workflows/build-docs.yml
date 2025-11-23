@@ -1,0 +1,56 @@
+name: Build docs (PDF & DOCX)
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc \
+            texlive-xetex texlive-fonts-recommended texlive-latex-extra \
+            fonts-dejavu-core
+          pandoc --version
+          xelatex --version
+
+      - name: List markdown files
+        run: |
+          echo "Markdown files in repo:"
+          ls -1 *.md || true
+
+      - name: Build DOCX
+        run: |
+          INPUT_FILES="chuong1.md chuong2.md chuong3.md chuong4.md chuong5.md chuong6.md chuong7.md"
+          if [ -f "python_guide_full.md" ]; then
+            pandoc python_guide_full.md -o python_guide_full.docx --standalone --toc --metadata title="Tài liệu Python chuyên sâu (Phần 1+2)" --highlight-style=tango
+            ls -l python_guide_full.docx
+          else
+            pandoc $INPUT_FILES -o python_guide_full.docx --standalone --toc --metadata title="Tài liệu Python chuyên sâu (Phần 1+2)" --highlight-style=tango
+            ls -l python_guide_full.docx
+          fi
+
+      - name: Build PDF (XeLaTeX)
+        run: |
+          INPUT_FILES="chuong1.md chuong2.md chuong3.md chuong4.md chuong5.md chuong6.md chuong7.md"
+          if [ -f "python_guide_full.md" ]; then
+            pandoc python_guide_full.md -o python_guide_full.pdf --pdf-engine=xelatex -V geometry:margin=2cm -V papersize:a4 -V fontsize=11pt --toc --highlight-style=tango --include-in-header=header.tex --lua-filter=color-spans.lua || true
+          else
+            pandoc $INPUT_FILES -o python_guide_full.pdf --pdf-engine=xelatex -V geometry:margin=2cm -V papersize=a4 -V fontsize=11pt --toc --highlight-style=tango --include-in-header=header.tex --lua-filter=color-spans.lua || true
+          fi
+          ls -l python_guide_full.pdf || true
+
+      - name: Upload artifacts (PDF & DOCX)
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-artifacts
+          path: |
+            python_guide_full.pdf
+            python_guide_full.docx
