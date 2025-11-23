@@ -1,0 +1,75 @@
+name: Build split docs (per-chapter PDF & DOCX)
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-split:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc \
+            texlive-xetex texlive-fonts-recommended texlive-latex-extra \
+            fonts-dejavu-core
+          pandoc --version
+          xelatex --version
+
+      - name: List markdown files
+        run: |
+          echo "Markdown files in repo:"
+          ls -1 chuong*.md || true
+          ls -1 python_guide_full.md || true
+
+      - name: Create outputs dir
+        run: mkdir -p outputs
+
+      - name: Build per-chapter DOCX and PDF
+        run: |
+          set -e
+          for md in chuong*.md; do
+            [ -f "$md" ] || continue
+            base=$(basename "$md" .md)
+            out_docx="outputs/${base}.docx"
+            out_pdf="outputs/${base}.pdf"
+            echo "Building $out_docx and $out_pdf from $md ..."
+            # Build DOCX
+            pandoc "$md" -o "$out_docx" --standalone --toc --metadata title="$base" --highlight-style=tango
+            # Build PDF (use header.tex and color-spans.lua if present)
+            if [ -f header.tex ] && [ -f color-spans.lua ]; then
+              pandoc "$md" -o "$out_pdf" --pdf-engine=xelatex -V geometry:margin=2cm -V papersize:a4 -V fontsize=11pt --toc --highlight-style=tango --include-in-header=header.tex --lua-filter=color-spans.lua || true
+            else
+              pandoc "$md" -o "$out_pdf" --pdf-engine=xelatex -V geometry:margin=2cm -V papersize:a4 -V fontsize=11pt --toc --highlight-style=tango || true
+            fi
+            ls -lh "$out_docx" "$out_pdf" || true
+          done
+
+      - name: Build combined document if exists
+        run: |
+          if [ -f "python_guide_full.md" ]; then
+            echo "Building combined outputs for python_guide_full.md ..."
+            pandoc python_guide_full.md -o outputs/python_guide_full.docx --standalone --toc --metadata title="Tài liệu Python chuyên sâu (Phần 1+2)" --highlight-style=tango
+            if [ -f header.tex ] && [ -f color-spans.lua ]; then
+              pandoc python_guide_full.md -o outputs/python_guide_full.pdf --pdf-engine=xelatex -V geometry:margin=2cm -V papersize:a4 -V fontsize=11pt --toc --highlight-style=tango --include-in-header=header.tex --lua-filter=color-spans.lua || true
+            else
+              pandoc python_guide_full.md -o outputs/python_guide_full.pdf --pdf-engine=xelatex -V geometry:margin=2cm -V papersize=a4 -V fontsize=11pt --toc --highlight-style=tango || true
+            fi
+            ls -lh outputs/python_guide_full.* || true
+          else
+            echo "Combined file python_guide_full.md not found; skipping combined build."
+          fi
+
+      - name: Show outputs
+        run: ls -la outputs || true
+
+      - name: Upload outputs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-split-artifacts
+          path: outputs
