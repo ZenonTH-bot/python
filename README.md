@@ -7,3 +7,8 @@
 - `chuong5.md` — CHƯƠNG 5: CHUỖI KÝ TỰ (STRINGS)  
 - `chuong6.md` — CHƯƠNG 6: DANH SÁCH (LISTS)  
 - `chuong7.md` — CHƯƠNG 7: TỆP TIN (FILES)  
+
+# Thành viên nhóm:
+- Nguyễn Duy Khánh
+- Đỗ Huy Khương
+- Nguyễn Sỹ Hoàng Anh
