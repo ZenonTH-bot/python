@@ -2,7 +2,7 @@
 
 # BT01
 
-### [cite\_start]1. Trình bày theo ý nghĩ của riêng “bạn”, tại sao bạn học lập trình?
+### 1. Trình bày theo ý nghĩ của riêng “bạn”, tại sao bạn học lập trình?
 
 > Khi thế giới ngày càng phát triển về công nghệ thì lập trình được ứng dụng rộng rãi trong nhiều lĩnh vực và bất cứ ai cũng học được, lại còn giúp em tiếp cận gần học với ngành **Kỹ thuật điều khiển và tự động hóa** nên việc học lập trình với em rất quan trọng
 
@@ -60,5 +60,6 @@ print("Hello world! Tôi là Nguyễn Sỹ Hoàng Anh")
 ```
 
 -----
+
 
 
