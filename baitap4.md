@@ -12,7 +12,6 @@ print(value)
 ```
 
 
-*(Lưu ý: Trong code gốc biến là `str`, mình đổi thành `str_val` để tránh trùng với từ khóa `str` của Python) *
 
 ## Ex6 
 
@@ -150,6 +149,7 @@ for line in fhand:
 
 print("There were", count, "subject lines in", fname)
 ```
+
 
 
 
