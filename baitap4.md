@@ -10,7 +10,6 @@ number_str = str_val[pos+1:]
 value = float(number_str)
 print(value)
 ```
-![Uploading image.png…]()
 
 
 *(Lưu ý: Trong code gốc biến là `str`, mình đổi thành `str_val` để tránh trùng với từ khóa `str` của Python) *
@@ -151,5 +150,6 @@ for line in fhand:
 
 print("There were", count, "subject lines in", fname)
 ```
+
 
 
