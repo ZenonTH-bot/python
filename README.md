@@ -1,4 +1,9 @@
-# Tài liệu Python — Chia theo chương
+# Thành viên nhóm:
+- Nguyễn Duy Khánh
+- Đỗ Huy Khương
+- Nguyễn Sỹ Hoàng Anh
+
+# Cheatsheet — Chia theo chương
 
 - `chuong1.md` — CHƯƠNG 1: BIẾN, BIỂU THỨC VÀ CÂU LỆNH  
 - `chuong2.md` — CHƯƠNG 2: CẤU TRÚC ĐIỀU KIỆN  
@@ -8,7 +13,9 @@
 - `chuong6.md` — CHƯƠNG 6: DANH SÁCH (LISTS)  
 - `chuong7.md` — CHƯƠNG 7: TỆP TIN (FILES)  
 
-# Thành viên nhóm:
-- Nguyễn Duy Khánh
-- Đỗ Huy Khương
-- Nguyễn Sỹ Hoàng Anh
+# Bài Tập nhóm
+
+- `baitap1.md` —
+- `baitap2.md` — Python, biến, biểu thức và câu lệnh
+- `baitap3.md` — Cấu trúc điều kiện
+- `baitap4.md` — String và Files
